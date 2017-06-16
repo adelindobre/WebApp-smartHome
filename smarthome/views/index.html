@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SmartHome</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<style type="text/css">
+    .demo-content{
+        padding: 15px;
+        font-size: 18px;
+        height: 1450px;
+        background: #F9F9F9;
+        margin-bottom: 10px;
+    }
+    .demo-content.bg-alt{
+        background: #FCFCFC;
+        margin-left: -25px;
+    }
+    .row {
+        height: 100%;
+    }
+    .navbar.navbar-inverse.navbar-static-top {
+        margin-top: -10px;
+    }
+    #maps{
+        background: #B2B2B2;
+        height: 400px;
+        width:100%;
+        margin-top: -10px;
+    }
+    .weather.col-md-12{
+        height: 300px;
+        margin-top: 10px;
+    }
+    .list-group{
+        width:108%;
+        margin-left: -10px;
+        margin-top: -10px;
+    }
+    .WeatheCond{
+        text-align: center;
+        margin-top: -5px;
+        margin-bottom: -5px;
+    }
+    .panel-body{
+        margin-left: 0px;
+        width: 100%;
+    }
+    .panel.panel-primary{
+        width: 102%;
+        margin-left: -1%
+    }
+   
+</style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="demo-content">
+                    <div class="list-group">
+                        <a href="/" class="list-group-item active">
+                            <span class="glyphicon glyphicon-th-large"></span> Dashboard
+                        </a>
+                        <a href="/charts" class="list-group-item">
+                            <span class="glyphicon glyphicon-signal"></span> Charts 
+                        </a>
+                        <a href="/devices" class="list-group-item">
+                            <span class="glyphicon glyphicon-hdd"></span> Devices
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <span class="glyphicon glyphicon-map-marker"></span> Locations
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="demo-content bg-alt">
+                    <nav role="navigation" class="navbar navbar-inverse navbar-static-top">
+                        <div class="navbar-header">
+                            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                            </buttonf="#" class="navbar-brand">Brand</a>
+                        </div>
+                        <div id="navbarCollapse" class="collapse navbar-collapse">
+                            <ul class="nav navbar-nav">
+                                <li class="active">
+                                    <a href="/">
+                                        <span class="glyphicon glyphicon-home"></span>  Home
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="glyphicon glyphicon-star"></span>  Favorites
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/settings">
+                                       <span class="glyphicon glyphicon-cog"></span>   Settings
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <div id="maps"></div>
+                    <script>
+                          function initMap(){
+                            var uluru = {lat: 41.791346, lng: -87.894217};
+                            var map = new google.maps.Map(document.getElementById('maps'), {
+                              zoom: 10,
+                              center: uluru
+                            });
+                            var marker = new google.maps.Marker({
+                              position: uluru,
+                              map: map
+                            });
+                          }
+                    </script>
+                    <script async defer
+                        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJxNwN5rOhZc-OBnhZQ9ld72zZSOzObkU&callback=initMap">
+                    </script>
+                    <div class="weather col-md-12">
+                         <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><h2 class="WeatheCond">Weather Conditions</h2></h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">                              
+                                    <div class="first col-md-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <p class="text-primary">Location name : <font color="red">{{ location }}</font></p>
+                                                <hr>
+                                                <p class="text-primary">Country : <font color="black">{{ country }}</font></p>
+                                                <hr>
+                                                <p class="text-primary">City ID : <font color="black">{{ id }}</font></p>
+                                                <hr>
+                                                <ul class="list-unstyled">
+                                                    <li><p class="text-primary">Coordonates:</p>
+                                                     <hr>
+                                                        <ul>
+                                                            <li>Longitude   : <font color="black">{{ long }}</font></li>
+                                                            <li>Latitude    : <font color="black">{{ lat }}</font></li>
+                                                        </ul>
+                                                    </li>    
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="second col-md-6">
+                                        <div class="panel panel-default doi">
+                                            <div class="panel-body">
+                                                <p class="text-primary">Weather Status  : <font color="black">{{ status }}</font></p>
+                                                <hr>
+                                                <ul class="list-unstyled">
+                                                    <li><p class="text-primary">More details :</p>
+                                                    <hr>
+                                                        <ul>
+                                                            <li>Pressure : <font color="black">{{ press }}</font></li>                                                            
+                                                            <li>Humidity : <font color="black">{{ hum }}</font></li>
+                                                            <li>Temp_min : <font color="black">{{ min }}</font></li>
+                                                            <li>Temp_max : <font color="black">{{ max }}</font></li>
+                                                            <li>Wind_speed : <font color="black">{{ speed }}</font></li>
+                                                            <br>
+                                                            <br>
+                                                        </ul>
+                                                    </li>    
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">   
+                            <div class="col-md-12">
+                                <p class="text-primary"><big><b>Forecast Temperature Chart</b></big></p>
+                                <div id="plotly-div"></div>
+                            </div>
+                        </div>
+				        <script>
+    						  var value = {{ JSON.stringify(val) }};
+    						  var data = [
+    								{
+    									x: value.x,
+    									y: value.y, 
+    									type: "bar",
+    								 	xsrc: "adelin.dobre1994:1:88fdc4", 
+    									ysrc: "adelin.dobre1994:1:b0609c"
+    								}
+    						  ];
+    						  Plotly.plot('plotly-div', data);		
+    					</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+</body>
+</html>                                                                             
